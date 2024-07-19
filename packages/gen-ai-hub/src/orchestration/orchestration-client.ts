@@ -6,7 +6,7 @@ import {
 import {
   CompletionPostRequest,
   CompletionPostResponse
-} from './api/schema/index.js';
+} from './schema/index.js';
 
 /**
  * Input Parameters for GenAI hub chat completion.

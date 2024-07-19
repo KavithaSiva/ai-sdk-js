@@ -4,6 +4,6 @@ export {
   OpenAiEmbeddingParameters,
   OpenAiEmbeddingOutput,
   OpenAiChatCompletionOutput
-} from './client/index.js';
+} from './foundation-models/index.js';
 export { CustomRequestConfig, BaseLlmParameters } from './core/index.js';
-export { GenAiHubClient } from './orchestration/index.js';
+export { GenAiHubClient, CompletionPostResponse, GenAiHubCompletionParameters } from './orchestration/index.js';

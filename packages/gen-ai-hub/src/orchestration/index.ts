@@ -1,2 +1,2 @@
-export * from './api/index.js';
+export * from './schema/index.js';
 export * from './orchestration-client.js';

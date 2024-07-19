@@ -9,7 +9,7 @@ import {
   GenAiHubClient,
   GenAiHubCompletionParameters
 } from './orchestration-client.js';
-import { CompletionPostResponse, ModuleConfigs } from './api/index.js';
+import { CompletionPostResponse, ModuleConfigs } from './schema/index.js';
 
 describe('GenAiHubClient', () => {
   let destination: HttpDestination;
