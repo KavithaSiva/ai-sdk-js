@@ -26,8 +26,8 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "lint": "eslint \"**/*.ts\" && prettier . --config ../../.prettierrc --ignore-path ../../.prettierignore -c",
     "lint:fix": "eslint \"**/*.ts\" --fix && prettier . --config ../../.prettierrc --ignore-path ../../.prettierignore -w --log-level error",
-    "generate": "pnpm generate:orchestration",
-    "generate:orchestration": "openapi-generator --generateESM --clearOutputDir -i ./src/orchestration/spec/api.yaml -o ./src/orchestration/client && pnpm lint:fix"
+    "generate:orchestration": "openapi-generator --generateESM --clearOutputDir -i ./src/orchestration/spec/api.yaml -o ./src/orchestration/client && pnpm lint:fix",
+    "generate:openai": "openapi-generator --generateESM --schemaPrefix=OpenAi --clearOutputDir -i ./src/openai/spec/inference.yaml -o ./src/openai/gen"
   },
   "dependencies": {
     "@sap-ai-sdk/core": "workspace:^",
@@ -38,7 +38,7 @@
     "@sap-cloud-sdk/openapi": "^3.20.0"
   },
   "devDependencies": {
-    "@sap-cloud-sdk/openapi-generator": "^3.20.0",
+    "@sap-cloud-sdk/openapi-generator": "file:./sap-cloud-sdk-openapi-generator-v3.20.0.tgz",
     "typescript": "^5.5.4",
     "nock": "^13.5.5"
   }

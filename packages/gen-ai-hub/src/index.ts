@@ -1,4 +1,4 @@
-export * from './client/index.js';
+export * from './openai/index.js';
 export {
   OrchestrationClient,
   OrchestrationCompletionParameters,

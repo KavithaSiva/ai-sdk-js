@@ -1,7 +1,5 @@
 import {
-  OpenAiClient,
-  OpenAiChatAssistantMessage
-} from '@sap-ai-sdk/gen-ai-hub';
+  OpenAiClient} from '@sap-ai-sdk/gen-ai-hub';
 
 const openAiClient = new OpenAiClient();
 
@@ -9,7 +7,7 @@ const openAiClient = new OpenAiClient();
  * Ask GPT about the capital of France.
  * @returns The answer from GPT.
  */
-export async function chatCompletion(): Promise<string> {
+export async function chatCompletion(): Promise<string | undefined> {
   const response = await openAiClient.chatCompletion(
     {
       messages: [{ role: 'user', content: 'What is the capital of France?' }]
@@ -17,8 +15,8 @@ export async function chatCompletion(): Promise<string> {
     'gpt-35-turbo'
   );
   const assistantMessage = response.choices[0]
-    .message as OpenAiChatAssistantMessage;
-  return assistantMessage.content!;
+    .message;
+  return assistantMessage?.content;
 }
 
 /**

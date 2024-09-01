@@ -2,17 +2,16 @@ import { type CustomRequestConfig, executeRequest } from '@sap-ai-sdk/core';
 import {
   getDeploymentId,
   type ModelDeployment
-} from '../../utils/deployment-resolver.js';
+} from '../utils/deployment-resolver.js';
 import type {
-  OpenAiChatCompletionParameters,
-  OpenAiEmbeddingParameters,
-  OpenAiEmbeddingOutput,
-  OpenAiChatCompletionOutput,
   OpenAiChatModel,
-  OpenAiEmbeddingModel
+  OpenAiCreateEmbeddingsRequest,
+  OpenAiEmbeddingModel,
+  OpenAiCreateEmbeddingsResponse
 } from './openai-types.js';
+import type { OpenAiCreateChatCompletionRequest, OpenAiCreateChatCompletionResponse } from './gen/inference/index.js';
 
-const apiVersion = '2024-02-01';
+const apiVersion = '2024-06-01';
 
 /**
  * OpenAI Client.
@@ -26,10 +25,10 @@ export class OpenAiClient {
    * @returns The completion result.
    */
   async chatCompletion(
-    data: OpenAiChatCompletionParameters,
+    data: OpenAiCreateChatCompletionRequest,
     modelDeployment: ModelDeployment<OpenAiChatModel>,
     requestConfig?: CustomRequestConfig
-  ): Promise<OpenAiChatCompletionOutput> {
+  ): Promise<OpenAiCreateChatCompletionResponse> {
     const deploymentId = await getDeploymentId(
       modelDeployment,
       'azure-openai',
@@ -54,10 +53,10 @@ export class OpenAiClient {
    * @returns The completion result.
    */
   async embeddings(
-    data: OpenAiEmbeddingParameters,
+    data: OpenAiCreateEmbeddingsRequest,
     modelDeployment: ModelDeployment<OpenAiEmbeddingModel>,
     requestConfig?: CustomRequestConfig
-  ): Promise<OpenAiEmbeddingOutput> {
+  ): Promise<OpenAiCreateEmbeddingsResponse> {
     const deploymentId = await getDeploymentId(
       modelDeployment,
       'azure-openai',

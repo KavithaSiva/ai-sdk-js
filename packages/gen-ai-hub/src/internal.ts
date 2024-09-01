@@ -1,2 +1,2 @@
-export * from './client/index.js';
+export * from './openai/index.js';
 export * from './orchestration/index.js';

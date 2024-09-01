@@ -3,7 +3,7 @@ import {
   mockClientCredentialsGrantCall,
   mockInference,
   parseMockResponse
-} from '../../../../../test-util/mock-http.js';
+} from '../../../../test-util/mock-http.js';
 import {
   OpenAiChatCompletionOutput,
   OpenAiChatMessage,

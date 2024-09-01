@@ -1,8 +1,8 @@
 import { expectError, expectType } from 'tsd';
 import {
   OpenAiClient,
-  OpenAiChatCompletionOutput,
-  OpenAiEmbeddingOutput
+  OpenAiCreateChatCompletionResponse,
+  OpenAiCreateEmbeddingsResponse
 } from '@sap-ai-sdk/gen-ai-hub';
 
 const client = new OpenAiClient();
@@ -11,7 +11,7 @@ expectType<OpenAiClient>(client);
 /**
  * Chat Completion.
  */
-expectType<Promise<OpenAiChatCompletionOutput>>(
+expectType<Promise<OpenAiCreateChatCompletionResponse>>(
   client.chatCompletion(
     {
       messages: [{ role: 'user', content: 'test prompt' }]
@@ -21,9 +21,21 @@ expectType<Promise<OpenAiChatCompletionOutput>>(
 );
 
 /**
+ * Chat Completion response message.
+ */
+expectType<string | undefined>(
+  (await client.chatCompletion(
+    {
+      messages: [{ role: 'user', content: 'test prompt' }]
+    },
+    'gpt-4'
+  )).choices[0].message?.content
+);
+
+/**
  * Embeddings.
  */
-expectType<Promise<OpenAiEmbeddingOutput>>(
+expectType<Promise<OpenAiCreateEmbeddingsResponse>>(
   client.embeddings(
     {
       input: 'test input'
