@@ -16,6 +16,8 @@ describe('Langchain OpenAI Access', () => {
 
   it('executes an invoke based on an embedding vector from our orchestration readme', async () => {
     const result = await invokeRagChain();
-    expect(result).toContain('@sap-ai-sdk/orchestration');
+    expect(result).toMatchInlineSnapshot(
+      `"Alice is getting tired because she is sitting in the hot sun, feeling very sleepy and stupid. She is also falling down a deep well, which is causing her to wonder how long the fall will last and consider the distance she may have fallen. There is no code example for this question."`
+    );
   });
 });

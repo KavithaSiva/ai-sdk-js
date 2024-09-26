@@ -10,6 +10,7 @@ import {
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
+import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
 
 /**
  * Ask GPT about the capital of France.
@@ -64,10 +65,11 @@ export async function invokeChain(): Promise<string> {
  */
 export async function invokeRagChain(): Promise<string> {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const resourcePath = resolve(__dirname, '../resources/orchestration.md');
+  const resourcePath = resolve(__dirname, '../resources/Alice_in_wonderland.pdf');
 
   // Create a text loader and load the document
-  const loader = new TextLoader(resourcePath);
+  // const loader = new TextLoader(resourcePath);
+  const loader = new PDFLoader(resourcePath);
   const docs = await loader.load();
 
   // Create a text splitter and split the document
@@ -119,7 +121,7 @@ export async function invokeRagChain(): Promise<string> {
   const retriever = vectorStore.asRetriever();
 
   // Create a prompt
-  const prompt = 'How do you use templating in the SAP Orchestration client?';
+  const prompt = 'Why is Alice getting tired?';
 
   // Invoke the chat client combined with the prompt, prompt template, output parser and vector store context
   return ragChain.invoke({
