@@ -11,7 +11,8 @@ import {
   orchestrationTemplating,
   orchestrationInputFiltering,
   orchestrationOutputFiltering,
-  orchestrationRequestConfig
+  orchestrationRequestConfig,
+  orchestrationGroundingDemo
 } from './orchestration.js';
 import {
   getDeployments,
@@ -126,7 +127,8 @@ app.get('/orchestration/:sampleCase', async (req, res) => {
       inputFiltering: orchestrationInputFiltering,
       outputFiltering: orchestrationOutputFiltering,
       requestConfig: orchestrationRequestConfig,
-      default: orchestrationChatCompletion
+      default: orchestrationChatCompletion,
+      groundingDemo: orchestrationGroundingDemo
     }[sampleCase] || orchestrationChatCompletion;
 
   try {

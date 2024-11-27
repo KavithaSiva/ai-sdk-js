@@ -40,8 +40,9 @@ export async function orchestrationChatCompletion(): Promise<OrchestrationRespon
 }
 
 const llm: LlmModuleConfig = {
-  model_name: 'gpt-4o',
-  model_params: {}
+  model_name: 'gpt-35-turbo',
+  model_params: {},
+  model_version: 'latest'
 };
 
 /**
@@ -245,6 +246,54 @@ export async function orchestrationGrounding(): Promise<OrchestrationResponse> {
   return orchestrationClient.chatCompletion({
     inputParams: {
       groundingRequest: 'What is Generative AI Hub in SAP AI Core?'
+    }
+  });
+}
+
+/**
+ * Test orchestration grounding demo.
+ * @returns The orchestration service response.
+ */
+export async function orchestrationGroundingDemo(): Promise<OrchestrationResponse> {
+  const orchestrationClient = new OrchestrationClient({
+    llm,
+    templating: {
+      template: [
+        {
+          role: 'user',
+          content:
+            'You are a helpful assistant for any queries for answering questions.\\\\nAnswer the grounding request by providing relevant answers that fit to the request. Your response should be formated into HTML without wrapping the code with markdown syntax. Put some emojis in the text and adjust text size and weight to make the page look nicer. \\\\n\\\\nRequest: {{ ?groundingRequest }}\\\\n\\\\nContext:{{ ?groundingOutput }}.'
+        }
+      ]
+    },
+    grounding: {
+      type: 'document_grounding_service',
+      config: {
+        filters: [
+          {
+            id: 'filter1',
+            data_repositories: [
+              '4a2a284c-9f6e-41b1-bdae-2e8df1820e09'
+            ],
+            search_config: {
+              max_chunk_count: 1
+            },
+            data_repository_type: 'vector',
+          }
+        ],
+        input_params: ['groundingRequest'],
+        output_param: 'groundingOutput'
+      }
+    }
+  },
+  {
+    resourceGroup: 'test-canary-grounding'
+  }
+);
+
+  return orchestrationClient.chatCompletion({
+    inputParams: {
+      groundingRequest: 'Could you show me the documentation of grounding module and the contact people?'
     }
   });
 }
