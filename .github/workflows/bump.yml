@@ -44,10 +44,6 @@ jobs:
     outputs:
       pr_url: ${{ steps.open_pr.outputs.pr_url }}
     steps:
-      - name: Checkout current repository
-        uses: sap/ai-sdk-js/.github/actions/setup@main
-        with:
-          node-version: ${{ env.NODE_VERSION }}
       - name: Checkout Docs Repo
         uses: actions/checkout@v4
         with:
@@ -58,12 +54,12 @@ jobs:
       - name: Update release notes file
         id: update-notes
         run: |
-          NODE_OPTIONS="--loader ts-node/esm" pnpm ts-node --esm scripts/execute-add-changelog.ts
+          npm ci
+          NODE_OPTIONS="--loader ts-node/esm" npm ts-node --esm scripts/execute-add-changelog.ts
       - name: Open Release notes PR
         id: open_pr
         working-directory: ${{ env.DOCS_CHECKOUT_PATH }}
         run: |
-          npm ci
           git config --local user.email "cloudsdk@sap.com"
           git config --local user.name "SAP Cloud SDK Bot"
           BRANCH_NAME="update-release-notes-1.12.0"
