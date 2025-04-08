@@ -92,6 +92,9 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - name: 'Delete Release Tag'
         if: ${{ needs.bump.outputs.version != '' }}
         run: |
@@ -101,9 +104,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_CLOUD_SDK_JS_ADMIN_WRITE_TOKEN }}
           continue-on-error: true
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
       - name: 'Close Release Notes PR and Delete Branch'
         if: ${{ needs.prepare-release-notes.outputs.pr_url != '' }}
         run: |
