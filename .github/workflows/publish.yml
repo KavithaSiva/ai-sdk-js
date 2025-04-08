@@ -19,11 +19,11 @@ jobs:
       - uses: sap/ai-sdk-js/.github/actions/setup@main
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: publish
-        run: |
-          pnpm changeset publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_ACCESS_TOKEN }}
+      # - name: publish
+      #   run: |
+      #     pnpm changeset publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPMJS_ACCESS_TOKEN }}
       - name: Get Package Version
         id: get_version
         run: |
