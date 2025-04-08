@@ -63,6 +63,7 @@ jobs:
         id: open_pr
         working-directory: ${{ env.DOCS_CHECKOUT_PATH }}
         run: |
+          npm ci
           git config --local user.email "cloudsdk@sap.com"
           git config --local user.name "SAP Cloud SDK Bot"
           BRANCH_NAME="update-release-notes-1.12.0"
