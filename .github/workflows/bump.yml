@@ -53,6 +53,7 @@ jobs:
           fetch-depth: 0
       - name: Update release notes file
         id: update-notes
+        working-directory: ${{ env.DOCS_CHECKOUT_PATH }}
         run: |
           npm ci
           NODE_OPTIONS="--loader ts-node/esm" npm ts-node --esm scripts/execute-add-changelog.ts
@@ -66,7 +67,6 @@ jobs:
           git checkout -b "${BRANCH_NAME}"
           npm run lint:fix
           git add docs-js/release-notes.mdx
-
 
   handle-failure:
     name: Handle Failure
