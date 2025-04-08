@@ -67,6 +67,7 @@ jobs:
           git config --local user.name "SAP Cloud SDK Bot"
           BRANCH_NAME="update-release-notes-1.12.0"
           git checkout -b "${BRANCH_NAME}"
+          pnpm install
           pnpm lint:fix
           git add docs-js/release-notes.mdx
 
