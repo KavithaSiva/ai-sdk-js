@@ -1,5 +1,22 @@
 # @sap-ai-sdk/langchain
 
+## 1.11.0
+
+### Minor Changes
+
+- f7e0ebb: [New Functionality] Support using data masking in LangChain orchestration client.
+- f7e0ebb: [New Functionality] Support using content filtering in LangChain orchestration client.
+
+### Patch Changes
+
+- Updated dependencies [f7e0ebb]
+- Updated dependencies [f7e0ebb]
+- Updated dependencies [f7e0ebb]
+  - @sap-ai-sdk/core@1.11.0
+  - @sap-ai-sdk/orchestration@1.11.0
+  - @sap-ai-sdk/ai-api@1.11.0
+  - @sap-ai-sdk/foundation-models@1.11.0
+
 ## 1.10.0
 
 ### Patch Changes
