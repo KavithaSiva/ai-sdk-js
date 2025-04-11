@@ -95,7 +95,7 @@ jobs:
   lint-docs:
     name: Run Lint Fix on Docs
     runs-on: ubuntu-latest
-    needs: [prepare-release-notes]
+    needs: [prepare-release-notes, bump]
     if: needs.prepare-release-notes.outputs.pr_url != ''
     steps:
       - name: Checkout Docs Repo
