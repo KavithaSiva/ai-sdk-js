@@ -28,6 +28,19 @@
 
 -
 
+# 1.11.0
+## Compatibility Notes
+
+- [core] Removed deprecated model `text-embedding-ada-002`.
+  Use `text-embedding-3-small` or `text-embedding-3-large` instead. (ae97740)
+
+## New Features
+
+- [langchain] Support using data masking in LangChain orchestration client. (ae97740)
+- [langchain] Support using content filtering in LangChain orchestration client. (ae97740)
+- [orchestration] Introduce `buildDpiMaskingProvider()` convenience function to build masking provider `SAP Data Privacy Integration`. (ae97740)
+- [orchestration] Support setting `metadata_params` property in `buildDocumentGroundingConfig()` convenience function. (ae97740)
+
 # 1.10.0
 ## New Features
 
