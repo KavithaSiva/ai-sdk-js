@@ -40,6 +40,7 @@ jobs:
   prepare-release-notes:
     name: Prepare Release Notes
     runs-on: ubuntu-latest
+    needs: [bump]
     outputs:
       pr_url: ${{ steps.open_pr.outputs.pr_url }}
     steps:
