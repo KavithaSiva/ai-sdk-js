@@ -1,5 +1,12 @@
 # @sap-ai-sdk/ai-api
 
+## 1.11.0
+
+### Patch Changes
+
+- Updated dependencies [fbea399]
+  - @sap-ai-sdk/core@1.11.0
+
 ## 1.10.0
 
 ### Patch Changes
