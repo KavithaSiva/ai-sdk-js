@@ -1,18 +1,5 @@
 # @sap-ai-sdk/orchestration
 
-## 1.11.0
-
-### Minor Changes
-
-- 97b54f1: [New Functionality] Introduce `buildDpiMaskingProvider()` convenience function to build masking provider `SAP Data Privacy Integration`.
-- 97b54f1: [New Functionality] Support setting `metadata_params` property in `buildDocumentGroundingConfig()` convenience function.
-
-### Patch Changes
-
-- Updated dependencies [97b54f1]
-  - @sap-ai-sdk/core@1.11.0
-  - @sap-ai-sdk/ai-api@1.11.0
-
 ## 1.10.0
 
 ### Patch Changes
