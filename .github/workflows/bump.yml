@@ -52,7 +52,6 @@ jobs:
         with:
           repository: ${{ env.DOCS_REPO }}
           token: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR }}
-          path: ${{ env.DOCS_CHECKOUT_PATH }}
           fetch-depth: 0
       - name: Update release notes file
         id: update-notes
