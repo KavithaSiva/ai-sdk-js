@@ -8,7 +8,7 @@ on:
         required: false
 env:
   DOCS_REPO: SAP/ai-sdk
-  DOCS_CHECKOUT_PATH: ./ai-sdk-docs
+  DOCS_CHECKOUT_PATH: ai-sdk-docs
   NODE_VERSION: 20
 
 jobs:
@@ -58,6 +58,7 @@ jobs:
         id: update-notes
         run: |
           echo "The current directory is: $(pwd)"
+          ls -la
           pnpm node --loader ts-node/esm -e "import { addCurrentChangelog } from './scripts/add-changelog.ts'; addCurrentChangelog()"
       - name: Open Release notes PR
         id: open_pr
