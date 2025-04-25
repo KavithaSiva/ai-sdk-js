@@ -29,7 +29,7 @@ jobs:
           BRANCH_NAME="update-release-notes-js-$VERSION"
           echo "release_notes_branch=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
         env:
-          GH_TOKEN: ${{ secrets.GH_CLOUD_SDK_JS_ADMIN_WRITE_TOKEN }} # Token needed if setup action doesn't install gh
+          GH_TOKEN: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR }} # Token needed if setup action doesn't install gh
 
       - name: Check PR Status (Exists, Merged)
         id: check_pr_status
@@ -50,7 +50,7 @@ jobs:
           echo "PR found. Merged: $MERGED_OUTPUT"
           echo "merged=$MERGED_OUTPUT" >> "$GITHUB_OUTPUT"
         env:
-          GH_TOKEN: ${{ secrets.GH_CLOUD_SDK_JS_ADMIN_WRITE_TOKEN }}
+          GH_TOKEN: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR }}
 
       - name: 'Check Whether Release Notes PR Can Be Merged'
         id: check_mergeability
@@ -60,7 +60,7 @@ jobs:
         with:
           pr-ref: ${{ steps.determine-branch-name.outputs.release_notes_branch }}
           repo: ${{ env.DOCS_REPO }}
-          token: ${{ secrets.GH_CLOUD_SDK_JS_ADMIN_WRITE_TOKEN }}
+          token: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR }}
           excluded-check-runs: |
             {
               "Build Cloud SDK Documentation": ["dependabot"]
@@ -92,4 +92,4 @@ jobs:
           echo "Attempting to merge PR for branch: ${{ needs.check-release-notes-pr.outputs.release_notes_branch }}"
           gh pr merge --squash "${{ needs.check-release-notes-pr.outputs.release_notes_branch }}" --delete-branch --repo "${{ env.DOCS_REPO }}"
         env:
-          GH_TOKEN: ${{ secrets.GH_CLOUD_SDK_JS_ADMIN_WRITE_TOKEN }}
+          GH_TOKEN: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR }}
