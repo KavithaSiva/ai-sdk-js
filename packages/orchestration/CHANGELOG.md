@@ -1,13 +1,5 @@
 # @sap-ai-sdk/orchestration
 
-## 1.12.1
-
-### Patch Changes
-
-- @sap-ai-sdk/ai-api@1.12.1
-- @sap-ai-sdk/core@1.12.1
-- @sap-ai-sdk/prompt-registry@1.12.1
-
 ## 1.12.0
 
 ### Minor Changes

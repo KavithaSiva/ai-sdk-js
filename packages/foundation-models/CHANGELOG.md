@@ -1,13 +1,5 @@
 # @sap-ai-sdk/foundation-models
 
-## 1.12.1
-
-### Patch Changes
-
-- 8130838: [Fixed Issue] Remove incorrect error logging if finish reason is null in the streaming chunk.
-  - @sap-ai-sdk/ai-api@1.12.1
-  - @sap-ai-sdk/core@1.12.1
-
 ## 1.12.0
 
 ### Patch Changes
