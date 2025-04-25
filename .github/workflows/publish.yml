@@ -83,7 +83,7 @@ jobs:
   merge-release-notes-pr:
     name: Merge Release Notes PR (if needed)
     runs-on: ubuntu-latest
-    needs: [check-release-notes-pr, publish-npm]
+    needs: [check-release-notes-pr]
     # Run only if PR is not merged and the check job succeeded
     if: needs.check-release-notes-pr.outputs.is_merged == 'false' && needs.check-release-notes-pr.result == 'success'
     steps:
