@@ -1,5 +1,15 @@
 # @sap-ai-sdk/langchain
 
+## 1.12.1
+
+### Patch Changes
+
+- Updated dependencies [09b71e2]
+  - @sap-ai-sdk/foundation-models@1.12.1
+  - @sap-ai-sdk/ai-api@1.12.1
+  - @sap-ai-sdk/core@1.12.1
+  - @sap-ai-sdk/orchestration@1.12.1
+
 ## 1.12.0
 
 ### Minor Changes

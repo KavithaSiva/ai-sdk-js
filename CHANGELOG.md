@@ -28,6 +28,13 @@
 
 -
 
+# 1.12.1
+## Fixed Issues
+
+- [foundation-models] Remove incorrect error logging if finish reason is null in the streaming chunk.
+  - @sap-ai-sdk/ai-api@1.12.1
+  - @sap-ai-sdk/core@1.12.1 (09b71e2)
+
 # 1.12.0
 ## Compatibility Notes
 
