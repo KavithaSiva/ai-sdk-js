@@ -1,7 +1,6 @@
 name: publish
 
 on:
-  workflow_dispatch:
   release:
     types: [published] # Trigger when a GitHub Release is published
 
@@ -16,7 +15,6 @@ jobs:
     outputs:
       release_notes_branch: ${{ steps.determine-branch-name.outputs.release_notes_branch }}
       is_merged: ${{ steps.check_pr_status.outputs.merged }}
-      is_mergeable: ${{ steps.check_mergeability.outputs.mergeable || 'false' }} # Default to false if step is skipped
     steps:
       - uses: sap/ai-sdk-js/.github/actions/setup@main
         with:
@@ -28,8 +26,6 @@ jobs:
           echo "Using version: $VERSION"
           BRANCH_NAME="update-release-notes-js-$VERSION"
           echo "release_notes_branch=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR }} # Token needed if setup action doesn't install gh
 
       - name: Check PR Status (Exists, Merged)
         id: check_pr_status
@@ -51,11 +47,9 @@ jobs:
           echo "PR found. Is Merged: $MERGED_OUTPUT"
           echo "merged=$MERGED_OUTPUT" >> "$GITHUB_OUTPUT"
         env:
-          GH_TOKEN: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR }}
+          GH_TOKEN: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR}}
 
       - name: 'Check Whether Release Notes PR Can Be Merged'
-        id: check_mergeability
-        # Only run if PR is not merged (existence is guaranteed by previous step success)
         if: steps.check_pr_status.outputs.merged == 'false'
         uses: ./.github/actions/pr-is-mergeable
         with:
@@ -64,13 +58,13 @@ jobs:
           token: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR }}
           excluded-check-runs: |
             {
-              "Build Cloud SDK Documentation": ["dependabot"]
+              \"Build Cloud SDK Documentation\": [\"dependabot\"]    
             }
 
   # publish-npm:
   #   name: Publish to NPM
   #   runs-on: ubuntu-latest
-  #   needs: [check-release-notes-pr] # Doesn't strictly need to wait, but keeps logical flow
+  #   needs: [check-release-notes-pr]
   #   steps:
   #     - uses: sap/ai-sdk-js/.github/actions/setup@main
   #       with:
@@ -85,12 +79,11 @@ jobs:
     name: Merge Release Notes PR (if needed)
     runs-on: ubuntu-latest
     needs: [check-release-notes-pr]
-    # Run only if PR is not merged and the check job succeeded
-    if: needs.check-release-notes-pr.outputs.is_merged == 'false' && needs.check-release-notes-pr.result == 'success'
+    if: needs.check-release-notes-pr.outputs.is_merged == 'false'
     steps:
       - name: 'Merge Release Notes PR'
         run: |
           echo "Attempting to merge PR for branch: ${{ needs.check-release-notes-pr.outputs.release_notes_branch }}"
           gh pr merge --squash "${{ needs.check-release-notes-pr.outputs.release_notes_branch }}" --delete-branch --repo "${{ env.DOCS_REPO }}"
         env:
-          GH_TOKEN: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR }}
+          GH_TOKEN: ${{ secrets.BOT_SDK_JS_FOR_DOCS_REPO_PR}}
