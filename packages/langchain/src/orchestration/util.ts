@@ -3,15 +3,21 @@ import type { ChatResult } from '@langchain/core/outputs';
 import type {
   ChatMessage,
   CompletionPostResponse,
+  SystemChatMessage,
   Template,
-  TemplatingModuleConfig
+  TemplatingModuleConfig,
+  ToolChatMessage,
+  UserChatMessage,
+  UserChatMessageContentItem
 } from '@sap-ai-sdk/orchestration';
 import type { ToolCall } from '@langchain/core/messages/tool';
 import type { AzureOpenAiChatCompletionMessageToolCalls } from '@sap-ai-sdk/foundation-models';
 import type {
   BaseMessage,
+  FunctionMessage,
   HumanMessage,
-  SystemMessage
+  SystemMessage,
+  ToolMessage
 } from '@langchain/core/messages';
 
 /**
@@ -33,14 +39,16 @@ export function isTemplate(object: TemplatingModuleConfig): object is Template {
 function mapBaseMessageToChatMessage(message: BaseMessage): ChatMessage {
   switch (message.getType()) {
     case 'ai':
-      return mapAiMessageToAzureOpenAiAssistantMessage(message);
+      return mapAiMessageToChatMessage(message);
     case 'human':
-      return mapHumanMessageToChatMessage(message);
+      return mapHumanMessageToUserChatMessage(message);
     case 'system':
-      return mapSystemMessageToAzureOpenAiSystemMessage(message);
+      return mapSystemMessageToSystemChatMessage(message);
     // TODO: As soon as tool messages are supported by orchestration, create mapping function similar to our azure mapping function.
     case 'function':
+      return mapFunctionMessageToToolChatMessage(message);
     case 'tool':
+      return mapToolMessageToToolChatMessage(message);
     default:
       throw new Error(`Unsupported message type: ${message.getType()}`);
   }
@@ -51,7 +59,7 @@ function mapBaseMessageToChatMessage(message: BaseMessage): ChatMessage {
  * @param message - The {@link AIMessage} to map.
  * @returns The Azure OpenAI {@link AzureOpenAiChatCompletionRequestAssistantMessage}.
  */
-function mapAiMessageToAzureOpenAiAssistantMessage(
+function mapAiMessageToChatMessage(
   message: AIMessage
 ): ChatMessage {
   /* TODO: Tool calls are currently bugged in orchestration, pass these fields as soon as orchestration supports it.
@@ -69,16 +77,46 @@ function mapAiMessageToAzureOpenAiAssistantMessage(
   } as ChatMessage;
 }
 
-function mapHumanMessageToChatMessage(message: HumanMessage): ChatMessage {
+function mapFunctionMessageToToolChatMessage(message: FunctionMessage): ToolChatMessage {
   return {
-    role: 'user',
+    role: 'tool',
     content: message.content
-  } as ChatMessage;
+  } as ToolChatMessage;
 }
 
-function mapSystemMessageToAzureOpenAiSystemMessage(
+function mapToolMessageToToolChatMessage(message: ToolMessage): ToolChatMessage {
+  return {
+    role: 'tool',
+    content: message.content
+  } as ToolChatMessage;
+}
+
+function mapHumanMessageToUserChatMessage(message: HumanMessage): UserChatMessage {
+  let content = message.content;
+  if (typeof message.content === 'object') {
+    content = [...message.content].map(item => {
+      if (item.type === 'image_url') {
+        const mappedItem = { ...item };
+        if (typeof item.image_url === 'object') {
+          mappedItem.image_url = {
+            url: item.image_url.url
+          };
+        }
+        return mappedItem as UserChatMessageContentItem;
+      }
+      return item;
+    }
+  );
+  }
+  return {
+    role: 'user',
+    content
+  } as UserChatMessage;
+}
+
+function mapSystemMessageToSystemChatMessage(
   message: SystemMessage
-): ChatMessage {
+): SystemChatMessage {
   // TODO: Remove as soon as image_url is a supported input for system messages in orchestration.
   if (
     typeof message.content !== 'string' &&
@@ -91,7 +129,7 @@ function mapSystemMessageToAzureOpenAiSystemMessage(
   return {
     role: 'system',
     content: message.content
-  } as ChatMessage;
+  } as SystemChatMessage;
 }
 
 /**

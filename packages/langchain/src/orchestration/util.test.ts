@@ -11,7 +11,7 @@ import {
 import type { OrchestrationMessage } from './orchestration-message.js';
 import type {
   CompletionPostResponse,
-  ResponseMessageToolCall
+  MessageToolCall
 } from '@sap-ai-sdk/orchestration';
 
 describe('mapLangchainMessagesToOrchestrationMessages', () => {
@@ -150,7 +150,7 @@ describe('mapOutputToChatResult', () => {
   });
 
   it('should map tool_calls correctly', () => {
-    const toolCallData: ResponseMessageToolCall = {
+    const toolCall: MessageToolCall = {
       id: 'call-123',
       type: 'function',
       function: {
@@ -171,7 +171,7 @@ describe('mapOutputToChatResult', () => {
             message: {
               content: 'Test content',
               role: 'assistant',
-              tool_calls: [toolCallData]
+              tool_calls: [toolCall]
             },
             finish_reason: 'tool_calls'
           }
