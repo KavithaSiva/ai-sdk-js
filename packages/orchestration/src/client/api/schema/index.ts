@@ -4,6 +4,20 @@
  * This is a generated file powered by the SAP Cloud SDK for JavaScript.
  */
 export * from './completion-post-request.js';
+export * from './embeddings-post-request.js';
+export * from './embeddings-orchestration-config.js';
+export * from './embeddings-input.js';
+export * from './embeddings-input-text.js';
+export * from './embeddings-module-configs.js';
+export * from './embeddings-model-config.js';
+export * from './embeddings-model-details.js';
+export * from './embeddings-model-params.js';
+export * from './embeddings-post-response.js';
+export * from './embeddings-module-results.js';
+export * from './embeddings-response.js';
+export * from './embeddings-usage.js';
+export * from './embedding-result.js';
+export * from './embedding.js';
 export * from './chat-messages.js';
 export * from './templating-chat-message.js';
 export * from './chat-message.js';
@@ -62,6 +76,9 @@ export * from './masking-module-config.js';
 export * from './masking-provider-config.js';
 export * from './dpi-config.js';
 export * from './dpi-entity-config.js';
+export * from './dpi-standard-entity.js';
+export * from './dpi-method-constant.js';
+export * from './dpi-method-fabricated-data.js';
 export * from './dpi-entities.js';
 export * from './grounding-module-config.js';
 export * from './document-grounding-filter.js';

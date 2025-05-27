@@ -3,8 +3,8 @@
  *
  * This is a generated file powered by the SAP Cloud SDK for JavaScript.
  */
-import type { DPIStandardEntity } from './dpi-standard-entity.js';
+
 /**
- * Representation of the 'DpiEntityConfig' schema.
+ * Representation of the 'Embedding' schema.
  */
-export type DpiEntityConfig = DPIStandardEntity;
+export type Embedding = number[] | string;

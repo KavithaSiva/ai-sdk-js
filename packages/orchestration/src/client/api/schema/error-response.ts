@@ -4,6 +4,7 @@
  * This is a generated file powered by the SAP Cloud SDK for JavaScript.
  */
 import type { ModuleResults } from './module-results.js';
+import type { EmbeddingsModuleResults } from './embeddings-module-results.js';
 /**
  * Representation of the 'ErrorResponse' schema.
  */
@@ -25,5 +26,5 @@ export type ErrorResponse = {
    * @example "LLM Module"
    */
   location: string;
-  module_results?: ModuleResults;
+  module_results?: ModuleResults | EmbeddingsModuleResults;
 } & Record<string, any>;

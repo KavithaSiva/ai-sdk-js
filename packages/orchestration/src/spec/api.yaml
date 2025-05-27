@@ -42,6 +42,33 @@ paths:
         default:
           $ref: '#/components/responses/CommonError'
 
+  /embeddings:
+    post:
+      tags:
+        - OrchestrationEmbeddings
+      summary: orchestrated embeddings inference
+      description: >
+        Generate embeddings for input strings.
+        Reference [azure-openai](https://github.com/Azure/azure-rest-api-specs/blob/cab152b8e3e8457ee213c037c487b81b069c7781/specification/cognitiveservices/data-plane/AzureOpenAI/inference/stable/2024-10-21/inference.yaml#L80)
+      operationId: orchestration.v1.endpoints.create_embeddings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmbeddingsPostRequest'
+      responses:
+        '200':
+          description: 'Successful response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmbeddingsPostResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/CommonError'
+
 components:
   schemas:
     CompletionPostRequest:
@@ -64,6 +91,222 @@ components:
             - $ref: '#/components/schemas/ChatMessages'
           description: History of chat messages. Can be used to provide system and assistant messages to set the context of the conversation. Will be merged with the template message
 
+    EmbeddingsPostRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - input
+        - orchestration_config
+      properties:
+        orchestration_config:
+          $ref: '#/components/schemas/EmbeddingsOrchestrationConfig'
+        input:
+          $ref: '#/components/schemas/EmbeddingsInput'
+    # Embedings Schemas
+    EmbeddingsOrchestrationConfig:
+      type: object
+      required:
+        - module_configs
+      additionalProperties: false
+      properties:
+        module_configs:
+          $ref: '#/components/schemas/EmbeddingsModuleConfigs'
+    EmbeddingsInput:
+      type: object
+      required:
+        - text
+      additionalProperties: false
+      properties:
+        text:
+          $ref: '#/components/schemas/EmbeddingsInputText'
+        type:
+          type: string
+          enum:
+            [
+              'text',
+              'document',
+              'query',
+              'RETRIEVAL_QUERY',
+              'RETRIEVAL_DOCUMENT',
+              'SEMANTIC_SIMILARITY',
+              'CLASSIFICATION',
+              'CLUSTERING',
+              'QUESTION_ANSWERING',
+              'FACT_VERIFICATION',
+              'CODE_RETRIEVAL_QUERY'
+            ]
+    EmbeddingsInputText:
+      oneOf:
+        - type: string
+          description: The string that will be turned into an embedding.
+          example: Hello World!
+        - type: array
+          description: The array of strings that will be turned into an embedding.
+          minItems: 1
+          items:
+            type: string
+            minLength: 1
+          example: "['Hello', 'World', '!']"
+        - type: array
+          description: The array of integers that will be turned into an embedding.
+          minItems: 1
+          items:
+            type: integer
+          example: '[1, 2, 3, 4, 5]'
+        - type: array
+          description: The array of arrays containing integers that will be turned into an embedding.
+          minItems: 1
+          items:
+            type: array
+            minItems: 1
+            items:
+              type: integer
+          example: '[[1], [2], [3], [4], [5]]'
+      description: Text input for which embeddings need to be generated
+      example: ['This is an input string.', 'This is another input string.']
+    EmbeddingsModuleConfigs:
+      type: object
+      required:
+        - embeddings
+      additionalProperties: false
+      properties:
+        embeddings:
+          $ref: '#/components/schemas/EmbeddingsModelConfig'
+        masking:
+          $ref: '#/components/schemas/MaskingModuleConfig'
+    EmbeddingsModelConfig:
+      type: object
+      required:
+        - model
+      additionalProperties: false
+      properties:
+        model:
+          $ref: '#/components/schemas/EmbeddingsModelDetails'
+    EmbeddingsModelDetails:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+          default: 'latest'
+        params:
+          $ref: '#/components/schemas/EmbeddingsModelParams'
+    EmbeddingsModelParams:
+      type: object
+      description: Additional parameters for generating input's embeddings. Default values are used for mandatory parameters.
+      additionalProperties: true
+      properties:
+        dimensions:
+          type: integer
+          description: >
+            The number of dimensions the resulting output embeddings should
+            have. Only supported in `text-embedding-3` and later models.
+        encoding_format:
+          type: string
+          description: >
+            OpenAI - The format to return the embeddings in. It can be either `float` or `base64`.
+          enum:
+            - float
+            - base64
+            - binary
+        auto_truncate:
+          type: boolean
+        normalize:
+          type: boolean
+
+    EmbeddingsPostResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - request_id
+      properties:
+        request_id:
+          type: string
+        module_results:
+          $ref: '#/components/schemas/EmbeddingsModuleResults'
+          description: Results of each module of /embeddings endpoint(e.g. input masking).
+        orchestration_result:
+          $ref: '#/components/schemas/EmbeddingsResponse'
+          description: The response from request to embedding model following openAI specification.
+    EmbeddingsModuleResults:
+      description: Results of each module.
+      type: object
+      additionalProperties: false
+      properties:
+        input_masking:
+          $ref: '#/components/schemas/GenericModuleResult'
+    EmbeddingsResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - object
+        - data
+        - model
+        - usage
+      properties:
+        object:
+          type: string
+          description: The object type, which is always "list".
+          enum:
+            - list
+        data:
+          type: array
+          description: The list of embeddings generated by the model.
+          items:
+            $ref: '#/components/schemas/EmbeddingResult'
+        model:
+          type: string
+          description: The name of the model used to generate the embedding.
+        usage:
+          $ref: '#/components/schemas/EmbeddingsUsage'
+    EmbeddingsUsage:
+      type: object
+      description: The usage information for the request.
+      additionalProperties: false
+      required:
+        - prompt_tokens
+        - total_tokens
+      properties:
+        prompt_tokens:
+          type: integer
+          description: The number of tokens used by the prompt.
+        total_tokens:
+          type: integer
+          description: The total number of tokens used by the request.
+    EmbeddingResult:
+      type: object
+      description: |
+        Represents an embedding vector returned by embedding endpoint.
+      additionalProperties: false
+      required:
+        - object
+        - embedding
+        - index
+      properties:
+        object:
+          type: string
+          description: The object type, which is always "embedding".
+          enum:
+            - embedding
+        embedding:
+          $ref: '#/components/schemas/Embedding'
+        index:
+          type: integer
+          description: The index of the embedding in the list of embeddings.
+    Embedding:
+      oneOf:
+        - type: array
+          items:
+            type: number
+          description: 'An array of numbers representing the embedding.'
+        - type: string
+          description: 'A single base64 string representing the embedding.'
+
+    # Chat Completion Schemas
     ChatMessages:
       type: array
       items:
@@ -76,7 +319,6 @@ components:
         $ref: '#/components/schemas/ChatMessage'
 
     ChatMessage:
-      type: object
       oneOf:
         - $ref: '#/components/schemas/SystemChatMessage'
         - $ref: '#/components/schemas/UserChatMessage'
@@ -195,6 +437,10 @@ components:
       required:
         - role
         - content
+    # Below, OpenAI's spec marks 'content' as required but nullable: https://github.com/Azure/azure-rest-api-specs/blob/8279d4aee23a3fef5aac9c76333b0895c83e44c3/specification/cognitiveservices/data-plane/AzureOpenAI/inference/stable/2024-10-21/inference.yaml#L2121
+    # We've made it optional instead to maintain SDK compatibility and avoid breaking changes.
+    # Functionally achieves the same result as both patterns permit responses without textual content
+    # OpenAI via null values, ours via field omission.
     ResponseChatMessage:
       type: object
       additionalProperties: false
@@ -209,6 +455,8 @@ components:
           type: string
         tool_calls:
           $ref: '#/components/schemas/MessageToolCalls'
+      required:
+        - role
     # below tool message definitions are copied from openai spec: https://github.com/openai/openai-openapi/blob/e0cb2d721753e13e69e918465795d6e9f87ab15a/openapi.yaml#L11007
     # only renaming them to differentiate them from the openai python classes
     MessageToolCalls:
@@ -328,6 +576,7 @@ components:
 
     CompletionPostResponseStreaming:
       # TODO: This seems unused in the spec, but used in our endpoints.py, related to Github #778
+      # see also lint rule ignore in `.spectral.yaml`, Remove the ignore when fixing.
       type: object
       required:
         - request_id
@@ -1042,15 +1291,51 @@ components:
               description: controls whether the input to the grounding module will be masked with the configuration supplied in the masking module
 
     DPIEntityConfig:
+      oneOf:
+        - $ref: '#/components/schemas/DPIStandardEntity'
+
+    DPIStandardEntity:
       type: object
       required:
         - type
       additionalProperties: false
       properties:
         type:
-          description: Type of entity to be masked
-          allOf:
-            - $ref: '#/components/schemas/DPIEntities'
+          $ref: '#/components/schemas/DPIEntities'
+        replacement_strategy:
+          description: Replacement strategy to be used for the entity
+          oneOf:
+            - $ref: '#/components/schemas/DPIMethodConstant'
+            - $ref: '#/components/schemas/DPIMethodFabricatedData'
+
+    DPIMethodConstant:
+      description: Replaces the entity with the specified value followed by an incrementing number
+      type: object
+      required:
+        - method
+        - value
+      additionalProperties: false
+      properties:
+        method:
+          type: string
+          enum:
+            - constant
+        value:
+          description: Value to be used for replacement
+          example: NAME_REDACTED
+          type: string
+
+    DPIMethodFabricatedData:
+      description: Replaces the entity with a randomly generated value appropriate to its type.
+      type: object
+      required:
+        - method
+      additionalProperties: false
+      properties:
+        method:
+          type: string
+          enum:
+            - fabricated_data
 
     DPIEntities:
       description: Default entities supported by data privacy and integration service
@@ -1077,6 +1362,7 @@ components:
         - profile-religious-group
         - profile-political-group
         - profile-pronouns-gender
+        - profile-ethnicity
         - profile-gender
         - profile-sexual-orientation
         - profile-trade-union
@@ -1307,7 +1593,11 @@ components:
           description: Where the error occurred
           example: 'LLM Module'
         module_results:
-          $ref: '#/components/schemas/ModuleResults'
+          # This field can represent results for either the /completion case (ModuleResults)
+          # or the /embeddings case (EmbeddingsModuleResults).
+          oneOf:
+            - $ref: '#/components/schemas/ModuleResults'
+            - $ref: '#/components/schemas/EmbeddingsModuleResults'
 
   responses:
     BadRequest:
