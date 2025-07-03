@@ -84,6 +84,25 @@ export class OrchestrationStream<Item> extends SseStream<Item> {
     }
   }
 
+  static async *_processModuleResults(
+    stream: OrchestrationStream<OrchestrationStreamChunkResponse>,
+    response?: OrchestrationStreamResponse<OrchestrationStreamChunkResponse>
+  ): AsyncGenerator<OrchestrationStreamChunkResponse> {
+    if (!response) {
+      throw new Error('Response is required to process module results.');
+    }
+    for await (const chunk of stream) {
+      const moduleResults = chunk.data.module_results;
+      if (moduleResults) {
+        mergeModuleResults(
+          response.moduleResults,
+          moduleResults
+        );
+      }
+      yield chunk;
+    }
+  }
+
   /**
    * @internal
    */

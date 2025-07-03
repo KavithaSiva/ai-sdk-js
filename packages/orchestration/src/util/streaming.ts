@@ -1,5 +1,6 @@
 import type {
   MessageToolCall,
+  ModuleResultsStreaming,
   ToolCallChunk
 } from '../client/api/schema/index.js';
 
@@ -75,4 +76,26 @@ export function mergeToolCallChunk(
   }
 
   return accumulator;
+}
+
+/**
+ * Merges new module results into existing module results.
+ * @internal
+ */
+export function mergeModuleResults(
+  incomingModuleResults: ModuleResultsStreaming,
+  moduleResults: ModuleResultsStreaming
+): void {
+  for (const [key, value] of Object.entries(incomingModuleResults)) {
+    if (moduleResults[key]) {
+      // If the key already exists, merge the values
+      moduleResults[key] = {
+        ...moduleResults[key],
+        ...value
+      };
+    } else {
+      // If the key does not exist, add it
+      moduleResults[key] = value;
+    }
+  }
 }

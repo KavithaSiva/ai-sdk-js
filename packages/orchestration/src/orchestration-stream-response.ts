@@ -2,6 +2,7 @@ import { isMessageToolCall } from './util/index.js';
 import type { ToolCallAccumulator } from './util/index.js';
 import type {
   MessageToolCalls,
+  ModuleResultsStreaming,
   TokenUsage
 } from './client/api/schema/index.js';
 import type { OrchestrationStream } from './orchestration-stream.js';
@@ -10,6 +11,7 @@ import type { OrchestrationStream } from './orchestration-stream.js';
  * Orchestration stream response.
  */
 export class OrchestrationStreamResponse<T> {
+  public moduleResults: ModuleResultsStreaming = {};
   private _usage: TokenUsage | undefined;
   /**
    * Finish reasons for all choices.
