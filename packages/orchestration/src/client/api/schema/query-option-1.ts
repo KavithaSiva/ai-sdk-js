@@ -5,6 +5,10 @@
  */
 
 /**
- * Representation of the 'Embedding' schema.
+ * Representation of the 'QueryOption1' schema.
  */
-export type Embedding = number[] | string;
+export type QueryOption1 = {
+  type: 'input_params' | 'by_role';
+  value: string[];
+  source_language?: string;
+};

@@ -3,8 +3,8 @@
  *
  * This is a generated file powered by the SAP Cloud SDK for JavaScript.
  */
-import type { SAPDocumentTranslation } from './sap-document-translation.js';
+import type { SAPDocumentTranslationInput } from './sap-document-translation-input.js';
 /**
  * Representation of the 'InputTranslationModuleConfig' schema.
  */
-export type InputTranslationModuleConfig = SAPDocumentTranslation;
+export type InputTranslationModuleConfig = SAPDocumentTranslationInput;
